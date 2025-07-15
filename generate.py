@@ -2,7 +2,6 @@ from flask import Flask, request, send_file
 import fitz  # PyMuPDF
 import io
 import os
-
 from datetime import datetime
 
 app = Flask(__name__)
@@ -26,6 +25,10 @@ FIELD_COORDS = {
     "address_inspection": (100, 810),
     "areas_covered": (350, 810),
 }
+
+@app.route("/")
+def home():
+    return "✅ FireCert Generator is running. Use POST /generate to send data."
 
 @app.route("/generate", methods=["POST"])
 def generate_pdf():
@@ -55,7 +58,6 @@ def generate_pdf():
 
     filename = f"FireCert-{data['client_contact'].replace(' ', '_')}-{datetime.now().strftime('%Y%m%d')}.pdf"
     return send_file(output, as_attachment=True, download_name=filename, mimetype='application/pdf')
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
